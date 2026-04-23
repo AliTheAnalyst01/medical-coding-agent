@@ -15,11 +15,9 @@ def load_graph() -> dict:
         relationships = json.load(f)
 
     excludes1_set = frozenset(
-        (r["code_1"], r["code_2"])
+        pair
         for r in relationships.get("mutual_exclusions", [])
-    ) | frozenset(
-        (r["code_2"], r["code_1"])
-        for r in relationships.get("mutual_exclusions", [])
+        for pair in ((r["code_1"], r["code_2"]), (r["code_2"], r["code_1"]))
     )
 
     etiology_pairs = {
