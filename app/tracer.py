@@ -48,6 +48,7 @@ class Tracer:
             "total_duration_ms": total_ms,
             "tokens_used": tokens_used,
         }
+        TRACES_DIR.mkdir(parents=True, exist_ok=True)
         ts = datetime.utcnow().strftime("%Y-%m-%d_%H-%M-%S")
         filename = TRACES_DIR / f"{ts}_req_{self.request_id}.json"
         with open(filename, "w", encoding="utf-8") as f:

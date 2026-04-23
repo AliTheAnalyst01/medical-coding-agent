@@ -4,9 +4,9 @@ from app.tracer import Tracer
 
 def test_tracer_records_steps():
     t = Tracer(request_id="test001")
-    t.record("coordinator", "extract_medical_entities", {"note": "HTN"}, {"diagnoses": ["HTN"]}, 120)
+    step = t.record("coordinator", "extract_medical_entities", {"note": "HTN"}, {"diagnoses": ["HTN"]}, 120)
     assert len(t.steps) == 1
-    step = t.steps[0]
+    assert step is t.steps[0]
     assert step["agent"] == "coordinator"
     assert step["tool"] == "extract_medical_entities"
     assert step["duration_ms"] == 120
