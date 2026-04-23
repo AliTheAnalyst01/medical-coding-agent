@@ -55,3 +55,15 @@ def test_excludes1_set_is_bidirectional():
     s = data["excludes1_set"]
     pair = next(iter(s))
     assert (pair[1], pair[0]) in s
+
+from app.knowledge_base.guidelines_loader import load_guidelines
+
+def test_guidelines_load():
+    text = load_guidelines()
+    assert isinstance(text, str)
+    assert len(text) > 5000
+
+def test_guidelines_contain_key_rules():
+    text = load_guidelines()
+    assert "Excludes1" in text
+    assert "principal diagnosis" in text.lower()
