@@ -31,6 +31,8 @@ def test_graph_loads():
     data = load_graph()
     assert "graph" in data
     assert "relationships" in data
+    assert "excludes1_set" in data
+    assert "etiology_pairs" in data
 
 def test_graph_has_nodes():
     data = load_graph()
@@ -47,3 +49,9 @@ def test_excludes1_set_built():
     data = load_graph()
     assert "excludes1_set" in data
     assert len(data["excludes1_set"]) > 5000
+
+def test_excludes1_set_is_bidirectional():
+    data = load_graph()
+    s = data["excludes1_set"]
+    pair = next(iter(s))
+    assert (pair[1], pair[0]) in s
