@@ -2,7 +2,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 import os
 
-load_dotenv()
+load_dotenv(override=True)
 
 DATA_DIR = Path("D:/medical_coding_knowledge_base_1/data")
 TRACES_DIR = Path(__file__).parent.parent / "traces"
