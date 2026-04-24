@@ -79,7 +79,7 @@ def _dispatch(name: str, inputs: dict):
         return get_children(inputs["code"])
     if name == "filter_by_chapter":
         return filter_by_chapter(inputs["chapter_number"])
-    return f"Unknown tool: {name}"
+    raise ValueError(f"Unknown tool: {name}")
 
 
 def run_icd_cm_worker(diagnoses: list[str], tracer: Tracer) -> list[dict]:
