@@ -19,6 +19,7 @@ def run_agent(
     tool_dispatch: Callable[[str, dict], Any],
     tracer: Tracer,
     max_iterations: int = 10,
+    max_tokens: int = 2000,
 ) -> tuple[str, int]:
     """
     Run a Claude agent with tool use until it produces a final text response.
@@ -30,7 +31,7 @@ def run_agent(
     for _ in range(max_iterations):
         response = _client.messages.create(
             model=MODEL,
-            max_tokens=4096,
+            max_tokens=max_tokens,
             system=system_prompt,
             tools=tools,
             messages=messages,
