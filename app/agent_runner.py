@@ -2,9 +2,13 @@ import time
 import anthropic
 from typing import Any, Callable
 from app.tracer import Tracer
-from app.config import ANTHROPIC_API_KEY, MODEL
+from app.config import ANTHROPIC_API_KEY, MODEL, OPENROUTER_BASE_URL, OPENROUTER_HEADERS
 
-_client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
+_client = anthropic.Anthropic(
+    api_key=ANTHROPIC_API_KEY,
+    base_url=OPENROUTER_BASE_URL,
+    default_headers=OPENROUTER_HEADERS,
+)
 
 
 def run_agent(

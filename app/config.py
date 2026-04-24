@@ -9,4 +9,9 @@ TRACES_DIR = Path(__file__).parent.parent / "traces"
 TRACES_DIR.mkdir(exist_ok=True)
 
 ANTHROPIC_API_KEY = os.environ["ANTHROPIC_API_KEY"]
-MODEL = "claude-sonnet-4-6"
+MODEL = "anthropic/claude-haiku-4-5"
+OPENROUTER_BASE_URL = "https://openrouter.ai/api"
+OPENROUTER_HEADERS = {
+    "HTTP-Referer": "https://github.com/AliTheAnalyst01/medical-coding-agent",
+    "X-Title": "Medical Coding Agent",
+}
