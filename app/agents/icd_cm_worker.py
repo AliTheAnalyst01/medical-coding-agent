@@ -92,10 +92,16 @@ def run_icd_cm_worker(diagnoses: list[str], tracer: Tracer) -> list[dict]:
         tool_dispatch=_dispatch,
         tracer=tracer,
     )
-    # Strip markdown code fences if present
+    # Extract JSON array — handle plain JSON or text + code fence wrapper
     text = text.strip()
-    text = re.sub(r"^```(?:json)?\n?", "", text)
-    text = re.sub(r"\n?```$", "", text)
+    match = re.search(r"```(?:json)?\s*(\[.*?\])\s*```", text, re.DOTALL)
+    if match:
+        text = match.group(1)
+    else:
+        # Try to find a bare JSON array
+        array_match = re.search(r"\[.*\]", text, re.DOTALL)
+        if array_match:
+            text = array_match.group(0)
     try:
         return json.loads(text)
     except json.JSONDecodeError:
