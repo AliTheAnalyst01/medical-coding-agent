@@ -101,3 +101,29 @@ def test_coordinator_identifies_procedures():
     note = "Patient underwent percutaneous coronary intervention with stent placement and received IV insulin drip."
     result = run_coordinator(note=note, tracer=tracer)
     assert len(result["procedures"]) > 0 or len(result["drugs_supplies"]) > 0
+
+
+def test_validator_applies_hypertension_heart_failure_rule():
+    """FY2026 rule: HTN + heart failure must use combination code I11.0, not I10 + I50.x separately."""
+    tracer = Tracer("test-val-guideline-01")
+    proposed = [
+        {"code": "I10", "description": "Essential hypertension", "system": "ICD-10-CM"},
+        {"code": "I50.9", "description": "Heart failure unspecified", "system": "ICD-10-CM"},
+    ]
+    result = run_validator(proposed_codes=proposed, tracer=tracer)
+    all_codes = result["accepted"] + result["rejected"]
+    reasonings = " ".join(c.get("reasoning", "") + c.get("reason", "") for c in all_codes)
+    assert "I11" in reasonings or "combination" in reasonings.lower() or len(result["rejected"]) > 0
+
+
+def test_icd_cm_worker_flags_insufficient_documentation():
+    tracer = Tracer("test-icd-insuf-01")
+    result = run_icd_cm_worker(
+        diagnoses=["some kind of heart problem, unclear"],
+        tracer=tracer,
+    )
+    flagged = any(
+        c.get("code") == "QUERY_REQUIRED" or "insufficient" in c.get("reasoning", "").lower()
+        for c in result
+    )
+    assert flagged or len(result) == 0

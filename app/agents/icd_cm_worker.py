@@ -15,10 +15,14 @@ Your job:
 
 CRITICAL: Never return a parent/category code. If get_code_details shows is_leaf=False, you MUST call get_children and pick from the children.
 
+IMPORTANT: If a term is too vague to code accurately (e.g. "some heart problem", "abnormal lab", "unclear finding"),
+DO NOT guess. Instead, include an entry with code "QUERY_REQUIRED" and reasoning explaining what specific
+documentation the provider needs to supply (e.g. type of arrhythmia, acute vs chronic, location, etiology).
+
 Return a JSON array of objects. Each object must have:
-- "code": the ICD-10-CM code (e.g. "I10")
-- "description": the code description
-- "reasoning": why this code was chosen
+- "code": the ICD-10-CM code (e.g. "I10") OR "QUERY_REQUIRED" if documentation is insufficient
+- "description": the code description, OR a short label of the unclear term
+- "reasoning": why this code was chosen, OR what the provider must clarify
 
 Return ONLY the JSON array, no other text."""
 

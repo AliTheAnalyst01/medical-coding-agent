@@ -62,6 +62,13 @@ if run_btn and note.strip():
                 with st.expander(f"`{c['code']}` — {c.get('description', '')} — REJECTED"):
                     st.write(f"**Reason:** {c.get('reason', '')}")
 
+        query_required = [c for c in data["codes"] if c.get("code") == "QUERY_REQUIRED"]
+        if query_required:
+            st.warning(f"⚠️ {len(query_required)} term(s) need provider clarification")
+            for c in query_required:
+                with st.expander(f"QUERY REQUIRED — {c.get('description', 'Unclear term')}"):
+                    st.write(f"**What to ask the provider:** {c.get('reasoning', '')}")
+
         summary = data.get("validation_summary", {})
         st.caption(
             f"Proposed: {summary.get('total_proposed', 0)} | "
