@@ -67,3 +67,30 @@ def test_guidelines_contain_key_rules():
     text = load_guidelines()
     assert "Excludes1" in text
     assert "principal diagnosis" in text.lower()
+
+
+from app.knowledge_base.pcs_loader import load_pcs
+from app.knowledge_base.hcpcs_loader import load_hcpcs
+
+
+def test_pcs_loads():
+    data = load_pcs()
+    assert "index" in data
+    assert "tables" in data
+    assert "flat" in data
+
+
+def test_pcs_flat_has_codes():
+    data = load_pcs()
+    assert len(data["flat"]) > 70000
+
+
+def test_hcpcs_loads():
+    data = load_hcpcs()
+    assert "codes" in data
+    assert "betos" in data
+
+
+def test_hcpcs_has_codes():
+    data = load_hcpcs()
+    assert len(data["codes"]) > 5000

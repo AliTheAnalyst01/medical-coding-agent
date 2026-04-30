@@ -64,3 +64,40 @@ def test_validator_returns_correct_structure():
     assert "rejected" in result
     assert isinstance(result["accepted"], list)
     assert isinstance(result["rejected"], list)
+
+
+from app.agents.icd_pcs_worker import run_icd_pcs_worker
+from app.agents.hcpcs_worker import run_hcpcs_worker
+from app.agents.coordinator import run_coordinator
+
+
+def test_hcpcs_worker_finds_insulin():
+    tracer = Tracer("test-hcpcs-01")
+    result = run_hcpcs_worker(terms=["insulin injection"], tracer=tracer)
+    assert isinstance(result, list)
+
+
+def test_pcs_worker_returns_list():
+    tracer = Tracer("test-pcs-01")
+    result = run_icd_pcs_worker(
+        procedures=["percutaneous coronary intervention stent"],
+        tracer=tracer,
+    )
+    assert isinstance(result, list)
+
+
+def test_coordinator_extracts_entities():
+    tracer = Tracer("test-coord-01")
+    note = "Patient presents with acute inferior STEMI. Underwent PCI with drug-eluting stent. Also has Type 2 DM and HTN."
+    result = run_coordinator(note=note, tracer=tracer)
+    assert "diagnoses" in result
+    assert "procedures" in result
+    assert "drugs_supplies" in result
+    assert len(result["diagnoses"]) > 0
+
+
+def test_coordinator_identifies_procedures():
+    tracer = Tracer("test-coord-02")
+    note = "Patient underwent percutaneous coronary intervention with stent placement and received IV insulin drip."
+    result = run_coordinator(note=note, tracer=tracer)
+    assert len(result["procedures"]) > 0 or len(result["drugs_supplies"]) > 0

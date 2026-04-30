@@ -68,3 +68,29 @@ def test_check_specificity_non_leaf():
 def test_get_required_additional_codes_returns_list():
     result = get_required_additional_codes("E11.40")
     assert isinstance(result, list)
+
+
+from app.tools.pcs_lookup import search_pcs_index, search_pcs_flat
+from app.tools.hcpcs_lookup import search_hcpcs, get_hcpcs_details, get_betos_category
+
+
+def test_search_pcs_flat_bypass():
+    results = search_pcs_flat("bypass")
+    assert isinstance(results, list)
+    assert len(results) > 0
+
+
+def test_search_hcpcs_insulin():
+    results = search_hcpcs("insulin")
+    assert isinstance(results, list)
+    assert len(results) > 0
+
+
+def test_get_hcpcs_details_returns_dict():
+    result = get_hcpcs_details("J1815")
+    assert isinstance(result, dict)
+
+
+def test_get_betos_category_returns_string():
+    result = get_betos_category("M1A")
+    assert isinstance(result, str)
