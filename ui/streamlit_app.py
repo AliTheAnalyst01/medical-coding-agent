@@ -26,7 +26,6 @@ with col_chat:
 
 with col_trace:
     st.subheader("Agent Trace")
-    trace_placeholder = st.empty()
 
 if run_btn and note.strip():
     with col_chat:
@@ -39,7 +38,7 @@ if run_btn and note.strip():
                 )
                 response.raise_for_status()
                 data = response.json()
-            except httpx.HTTPError as e:
+            except (httpx.HTTPError, httpx.TimeoutException) as e:
                 st.error(f"API error: {e}")
                 st.stop()
 
